@@ -4,8 +4,8 @@ import React from 'react';
 const BackgroundEffects: React.FC = () => {
   return (
     <>
-      {/* Completely transparent background */}
-      <div className="absolute inset-0 z-0 bg-transparent" />
+      {/* Very transparent dark background to improve readability without blocking view */}
+      <div className="absolute inset-0 z-0 bg-black/40 backdrop-blur-sm" />
     </>
   );
 };

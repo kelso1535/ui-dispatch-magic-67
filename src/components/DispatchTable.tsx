@@ -2,7 +2,7 @@
 import React from 'react';
 import { cn } from '@/lib/utils';
 import StatusBadge from './StatusBadge';
-import { UserPlus, UserMinus, MapPin, AlertCircle } from 'lucide-react';
+import { MapPin, CheckCircle, XCircle, Trash2, Navigation } from 'lucide-react';
 import { Button } from './ui/button';
 
 export interface DispatchRecord {
@@ -65,7 +65,7 @@ const DispatchTable: React.FC<DispatchTableProps> = ({
               <th className="px-4 py-2 text-left text-xs font-semibold text-white/60 uppercase tracking-wider">Type</th>
               <th className="px-4 py-2 text-left text-xs font-semibold text-white/60 uppercase tracking-wider">Location</th>
               <th className="px-4 py-2 text-left text-xs font-semibold text-white/60 uppercase tracking-wider">Details</th>
-              <th className="px-4 py-2 text-right text-xs font-semibold text-white/60 uppercase tracking-wider">Assigned</th>
+              <th className="px-4 py-2 text-left text-xs font-semibold text-white/60 uppercase tracking-wider">Assigned</th>
               <th className="px-4 py-2 text-center text-xs font-semibold text-white/60 uppercase tracking-wider">Actions</th>
             </tr>
           </thead>
@@ -75,7 +75,7 @@ const DispatchTable: React.FC<DispatchTableProps> = ({
                 key={record.id} 
                 className={cn(
                   'border-b border-white/5 hover:bg-white/5 transition-colors duration-150',
-                  index % 2 === 0 ? 'bg-white/[0.02]' : ''
+                  index % 2 === 0 ? 'bg-black/20' : 'bg-black/10'
                 )}
               >
                 <td className="px-4 py-4 text-sm font-mono">{record.id}</td>
@@ -89,66 +89,72 @@ const DispatchTable: React.FC<DispatchTableProps> = ({
                 <td className="px-4 py-4 text-sm">{record.location}</td>
                 <td className="px-4 py-4 text-sm max-w-md truncate">{record.details}</td>
                 <td className="px-4 py-4">
-                  <div className="flex flex-col items-end space-y-1">
-                    {record.assigned.map((person, idx) => (
-                      <div key={idx} className="text-sm">
-                        <span className="text-white/80">{person.name}</span>
-                        <span className="text-white/50 ml-1">- {person.callsign}</span>
-                      </div>
-                    ))}
-                    
-                    <div className="flex flex-wrap justify-end gap-1 mt-2">
-                      {record.statuses.map((status, idx) => (
-                        <StatusBadge key={idx} status={status as any} />
-                      ))}
-                    </div>
+                  <div className="flex flex-col space-y-1">
+                    {record.assigned.length > 0 ? (
+                      record.assigned.map((person, idx) => (
+                        <div key={idx} className="text-xs">
+                          <span className="text-white/80">{person.name}</span>
+                          <span className="text-white/50 ml-1">- {person.callsign}</span>
+                        </div>
+                      ))
+                    ) : (
+                      <span className="text-xs text-white/40">No units assigned</span>
+                    )}
                   </div>
                 </td>
-                <td className="px-4 py-4">
-                  <div className="flex flex-col gap-2 items-center">
-                    {currentUser && (
-                      <>
-                        {!isUserAttached(record) ? (
-                          <Button 
-                            onClick={() => handleAttachToCall(record.id)}
-                            variant="ghost"
-                            size="sm"
-                            className="text-xs bg-dispatch-accent/20 hover:bg-dispatch-accent/30 text-dispatch-accent border border-dispatch-accent/30 w-full"
-                          >
-                            <UserPlus size={14} className="mr-1" />
-                            Attach
-                          </Button>
-                        ) : (
-                          <Button 
-                            onClick={() => handleDetachFromCall(record.id)}
-                            variant="ghost"
-                            size="sm"
-                            className="text-xs bg-dispatch-warning/20 hover:bg-dispatch-warning/30 text-dispatch-warning border border-dispatch-warning/30 w-full"
-                          >
-                            <UserMinus size={14} className="mr-1" />
-                            Detach
-                          </Button>
-                        )}
-                        
-                        <Button 
-                          variant="ghost"
-                          size="sm"
-                          className="text-xs bg-dispatch-highlight/20 hover:bg-dispatch-highlight/30 text-dispatch-highlight border border-dispatch-highlight/30 w-full"
-                        >
-                          <MapPin size={14} className="mr-1" />
-                          GPS
-                        </Button>
-                        
-                        <Button 
-                          variant="ghost"
-                          size="sm"
-                          className="text-xs bg-dispatch-danger/20 hover:bg-dispatch-danger/30 text-dispatch-danger border border-dispatch-danger/30 w-full"
-                        >
-                          <AlertCircle size={14} className="mr-1" />
-                          Alert
-                        </Button>
-                      </>
-                    )}
+                <td className="px-2 py-4">
+                  <div className="flex flex-row items-center justify-end gap-1">
+                    <Button 
+                      variant="ghost"
+                      size="sm"
+                      className="h-8 w-8 p-0 bg-blue-500/20 hover:bg-blue-500/40 text-blue-400 rounded-sm"
+                    >
+                      <Navigation size={16} />
+                    </Button>
+                    
+                    <Button 
+                      variant="ghost"
+                      size="sm"
+                      className="h-8 w-8 p-0 bg-green-500/20 hover:bg-green-500/40 text-green-400 rounded-sm"
+                    >
+                      <CheckCircle size={16} />
+                    </Button>
+                    
+                    <Button 
+                      variant="ghost"
+                      size="sm"
+                      className="h-8 w-8 p-0 bg-yellow-500/20 hover:bg-yellow-500/40 text-yellow-400 rounded-sm"
+                    >
+                      <XCircle size={16} />
+                    </Button>
+                    
+                    <Button 
+                      variant="ghost"
+                      size="sm"
+                      className="h-8 w-8 p-0 bg-red-500/20 hover:bg-red-500/40 text-red-400 rounded-sm"
+                    >
+                      <Trash2 size={16} />
+                    </Button>
+                    
+                    {currentUser && !isUserAttached(record) ? (
+                      <Button 
+                        onClick={() => handleAttachToCall(record.id)}
+                        variant="ghost"
+                        size="sm"
+                        className="ml-1 h-8 px-2 py-0 text-xs bg-dispatch-accent/20 hover:bg-dispatch-accent/30 text-dispatch-accent rounded-sm"
+                      >
+                        Attach
+                      </Button>
+                    ) : currentUser && isUserAttached(record) ? (
+                      <Button 
+                        onClick={() => handleDetachFromCall(record.id)}
+                        variant="ghost"
+                        size="sm"
+                        className="ml-1 h-8 px-2 py-0 text-xs bg-dispatch-warning/20 hover:bg-dispatch-warning/30 text-dispatch-warning rounded-sm"
+                      >
+                        Detach
+                      </Button>
+                    ) : null}
                   </div>
                 </td>
               </tr>

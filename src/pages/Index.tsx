@@ -15,7 +15,7 @@ const IndexContent: React.FC = () => {
       
       {/* Content container with glass effect - now floating over screen */}
       <div className="absolute inset-0 z-10 flex flex-col">
-        <div className="flex-1 max-w-[90%] w-full mx-auto mt-16 mb-16 rounded-lg overflow-hidden glass-panel blue-glow">
+        <div className="flex-1 max-w-[90%] w-full mx-auto mt-16 mb-16 rounded-lg overflow-hidden bg-black/50 backdrop-blur-sm border border-white/10">
           {/* Header */}
           <DispatchHeader 
             currentUser={currentUser}

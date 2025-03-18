@@ -43,7 +43,7 @@
   }
 
   body {
-    @apply bg-dispatch-dark text-foreground;
+    @apply bg-transparent text-foreground;
     font-feature-settings: "rlig" 1, "calt" 1;
   }
 
@@ -67,7 +67,7 @@
 
 @layer utilities {
   .glass-panel {
-    @apply backdrop-blur-xl bg-dispatch-darker/70 border border-white/10 shadow-lg;
+    @apply backdrop-blur-sm bg-black/50 border border-white/10 shadow-lg;
   }
   
   .text-glow {
