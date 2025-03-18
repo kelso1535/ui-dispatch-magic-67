@@ -1,6 +1,7 @@
+
 import React, { useState } from 'react';
 import { cn } from '@/lib/utils';
-import { UserCircle2, Clock, Settings } from 'lucide-react';
+import { UserCircle2, Clock, Settings, X } from 'lucide-react';
 import { Button } from './ui/button';
 
 interface DispatchHeaderProps {
@@ -8,13 +9,15 @@ interface DispatchHeaderProps {
   className?: string;
   currentUser?: { name: string; callsign: string } | null;
   onLogin?: (user: { name: string; callsign: string }) => void;
+  onClose?: () => void;
 }
 
 const DispatchHeader: React.FC<DispatchHeaderProps> = ({ 
   title = "Emergency Services CAD", 
   className,
   currentUser,
-  onLogin
+  onLogin,
+  onClose
 }) => {
   const [showLoginForm, setShowLoginForm] = useState(false);
   const [name, setName] = useState('');
@@ -75,6 +78,18 @@ const DispatchHeader: React.FC<DispatchHeaderProps> = ({
           <Settings size={14} className="mr-1" />
           Settings
         </Button>
+
+        {onClose && (
+          <Button 
+            onClick={onClose}
+            variant="ghost" 
+            size="sm"
+            className="text-xs bg-red-500/30 hover:bg-red-500/50 text-white/80"
+          >
+            <X size={14} className="mr-1" />
+            Close
+          </Button>
+        )}
       </div>
       
       {/* Login form popup */}
