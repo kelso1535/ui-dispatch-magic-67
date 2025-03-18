@@ -3,34 +3,58 @@ import React, { useState, useEffect } from 'react';
 import DispatchHeader from '@/components/DispatchHeader';
 import DispatchTable, { DispatchRecord } from '@/components/DispatchTable';
 import LocationBar from '@/components/LocationBar';
+import { useToast } from '@/hooks/use-toast';
 
 const MOCK_DATA: DispatchRecord[] = [
   {
     id: '398',
     time: '21:37:21',
-    from: 'Unknown',
-    type: 'Call',
+    from: 'Dispatch',
+    type: 'CALL',
     location: 'Panorama Dr Grand Senora',
     details: 'Possible Fire Reported. ALERT STRUCT BUILDING FIRE. YELLOW JACK, PANORAMA DR, GRAND SENORA DESERT',
-    assigned: [
-      { name: 'Samuel Gumtree', callsign: '[EN]' },
-      { name: 'Leo Kiho', callsign: '[EN]' },
-      { name: 'Ryan Booth', callsign: '[EN]' }
-    ],
-    statuses: ['GPS', 'ENROUTE', 'ARRIVED', '10-8']
+    assigned: [],
+    statuses: ['GPS']
   },
   {
     id: '403',
     time: '21:44:34',
-    from: 'Unknown',
-    type: 'Call',
+    from: 'Dispatch',
+    type: 'CALL',
     location: 'El Rancho Blvd El Burro Heights',
     details: 'Possible Fire Reported. ALERT STRUCT BUILDING FIRE - Elysian Fields Fwy, El Burro Heights',
-    assigned: [
-      { name: 'Samuel Gumtree', callsign: '[EN]' },
-      { name: 'Leo Kiho', callsign: '[EN]' }
-    ],
-    statuses: ['GPS', 'ENROUTE', 'ARRIVED', '10-8']
+    assigned: [],
+    statuses: ['GPS']
+  },
+  {
+    id: '405',
+    time: '21:48:01',
+    from: 'Dispatch',
+    type: 'ALERT',
+    location: 'Olympic Fwy Downtown',
+    details: 'Vehicle accident with injuries. Multiple vehicles involved. Possible entrapment.',
+    assigned: [],
+    statuses: ['GPS']
+  },
+  {
+    id: '407',
+    time: '21:52:12',
+    from: '911',
+    type: 'EMERGENCY',
+    location: 'Vespucci Beach',
+    details: 'Water rescue - swimmer in distress approximately 100 yards offshore. Caller states victim is struggling to stay above water.',
+    assigned: [],
+    statuses: ['GPS']
+  },
+  {
+    id: '410',
+    time: '22:01:34',
+    from: 'Officer',
+    type: 'BACKUP',
+    location: 'Vinewood Blvd',
+    details: 'Request for officer assistance. Suspect attempting to flee on foot after traffic stop.',
+    assigned: [],
+    statuses: ['GPS', 'URGENT']
   },
 ];
 
@@ -38,6 +62,7 @@ const Index: React.FC = () => {
   const [records, setRecords] = useState<DispatchRecord[]>([]);
   const [currentLocation, setCurrentLocation] = useState('Panorama Dr, Grand Senora Desert');
   const [currentUser, setCurrentUser] = useState<{ name: string; callsign: string } | null>(null);
+  const { toast } = useToast();
 
   useEffect(() => {
     // Simulate loading data with a subtle animation
@@ -47,11 +72,41 @@ const Index: React.FC = () => {
     };
     
     loadData();
-  }, []);
+    
+    // Simulate getting occasional new calls
+    const newCallInterval = setInterval(() => {
+      if (Math.random() > 0.7) {
+        const newCall: DispatchRecord = {
+          id: (410 + Math.floor(Math.random() * 100)).toString(),
+          time: new Date().toLocaleTimeString('en-US', { hour12: false }),
+          from: ['Dispatch', '911', 'Officer'][Math.floor(Math.random() * 3)],
+          type: ['CALL', 'EMERGENCY', 'ALERT', 'BACKUP'][Math.floor(Math.random() * 4)],
+          location: ['Downtown LS', 'Vinewood', 'Sandy Shores', 'Paleto Bay'][Math.floor(Math.random() * 4)],
+          details: 'New incident reported. Units requested to respond.',
+          assigned: [],
+          statuses: ['GPS']
+        };
+        
+        setRecords(prev => [newCall, ...prev]);
+        
+        toast({
+          title: "New Dispatch Call",
+          description: `${newCall.type}: ${newCall.location}`,
+          variant: "default",
+        });
+      }
+    }, 30000);
+    
+    return () => clearInterval(newCallInterval);
+  }, [toast]);
 
   const handleUserLogin = (user: { name: string; callsign: string }) => {
     setCurrentUser(user);
-    console.log('User logged in:', user);
+    toast({
+      title: "Logged In",
+      description: `Welcome ${user.name} (${user.callsign})`,
+      variant: "default",
+    });
   };
 
   const handleAttachToCall = (recordId: string, user: { name: string; callsign: string }) => {
@@ -64,17 +119,46 @@ const Index: React.FC = () => {
           );
           
           if (!isAlreadyAssigned) {
+            toast({
+              title: "Attached to Call",
+              description: `You are now assigned to call #${recordId}`,
+              variant: "default",
+            });
+            
             return {
               ...record,
-              assigned: [...record.assigned, user]
+              assigned: [...record.assigned, user],
+              statuses: [...new Set([...record.statuses, 'ENROUTE'])]
             };
           }
         }
         return record;
       })
     );
-    
-    console.log(`User ${user.name} (${user.callsign}) attached to call ${recordId}`);
+  };
+
+  const handleDetachFromCall = (recordId: string, user: { name: string; callsign: string }) => {
+    setRecords(prevRecords => 
+      prevRecords.map(record => {
+        if (record.id === recordId) {
+          const updatedAssigned = record.assigned.filter(
+            person => person.name !== user.name || person.callsign !== user.callsign
+          );
+          
+          toast({
+            title: "Detached from Call",
+            description: `You have been removed from call #${recordId}`,
+            variant: "default",
+          });
+          
+          return {
+            ...record,
+            assigned: updatedAssigned
+          };
+        }
+        return record;
+      })
+    );
   };
 
   return (
@@ -106,6 +190,7 @@ const Index: React.FC = () => {
             <DispatchTable 
               records={records} 
               onAttachToCalls={handleAttachToCall}
+              onDetachFromCall={handleDetachFromCall}
               currentUser={currentUser || undefined}
             />
           </div>

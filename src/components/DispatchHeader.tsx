@@ -1,7 +1,8 @@
 
 import React, { useState } from 'react';
 import { cn } from '@/lib/utils';
-import { UserCircle2 } from 'lucide-react';
+import { UserCircle2, Clock, Settings } from 'lucide-react';
+import { Button } from './ui/button';
 
 interface DispatchHeaderProps {
   title: string;
@@ -19,6 +20,16 @@ const DispatchHeader: React.FC<DispatchHeaderProps> = ({
   const [showLoginForm, setShowLoginForm] = useState(false);
   const [name, setName] = useState('');
   const [callsign, setCallsign] = useState('');
+  const [currentTime, setCurrentTime] = useState(new Date());
+
+  // Update time every second
+  React.useEffect(() => {
+    const timer = setInterval(() => {
+      setCurrentTime(new Date());
+    }, 1000);
+    
+    return () => clearInterval(timer);
+  }, []);
 
   const handleLogin = (e: React.FormEvent) => {
     e.preventDefault();
@@ -29,32 +40,42 @@ const DispatchHeader: React.FC<DispatchHeaderProps> = ({
   };
 
   return (
-    <div className={cn('w-full px-6 py-3 glass-panel flex items-center justify-between', className)}>
-      <h1 className="text-sm font-mono uppercase tracking-wider text-white/80">
-        {title}
-      </h1>
+    <div className={cn('w-full px-6 py-3 glass-panel flex items-center justify-between border-b border-white/10', className)}>
+      <div className="flex items-center space-x-4">
+        <h1 className="text-sm font-mono uppercase tracking-wider text-white/80">
+          {title}
+        </h1>
+        <div className="flex items-center text-xs text-white/60 font-mono">
+          <Clock size={14} className="mr-1" />
+          {currentTime.toLocaleTimeString()}
+        </div>
+      </div>
+      
       <div className="flex items-center space-x-3">
-        <span className="text-xs text-white/60 font-mono">
-          {new Date().toLocaleTimeString()}
-        </span>
-        
         {!currentUser ? (
-          <button 
+          <Button 
             onClick={() => setShowLoginForm(!showLoginForm)}
-            className="px-3 py-1 text-xs rounded bg-dispatch-highlight/30 hover:bg-dispatch-highlight/50 text-white/80 transition-colors duration-200 flex items-center"
+            variant="ghost" 
+            size="sm"
+            className="text-xs bg-dispatch-highlight/30 hover:bg-dispatch-highlight/50 text-white/80"
           >
             <UserCircle2 size={14} className="mr-1" />
             Login
-          </button>
+          </Button>
         ) : (
           <div className="px-3 py-1 text-xs rounded bg-dispatch-success/20 text-dispatch-success border border-dispatch-success/30">
             {currentUser.name} - {currentUser.callsign}
           </div>
         )}
         
-        <button className="px-3 py-1 text-xs rounded bg-dispatch-muted/30 hover:bg-dispatch-muted/50 text-white/80 transition-colors duration-200">
-          Restore
-        </button>
+        <Button 
+          variant="ghost" 
+          size="sm"
+          className="text-xs bg-dispatch-muted/30 hover:bg-dispatch-muted/50 text-white/80"
+        >
+          <Settings size={14} className="mr-1" />
+          Settings
+        </Button>
       </div>
       
       {/* Login form popup */}
@@ -84,19 +105,23 @@ const DispatchHeader: React.FC<DispatchHeaderProps> = ({
               />
             </div>
             <div className="flex justify-end space-x-2">
-              <button 
+              <Button 
                 type="button"
                 onClick={() => setShowLoginForm(false)}
-                className="px-3 py-1 text-xs rounded bg-dispatch-muted/30 hover:bg-dispatch-muted/50 text-white/80 transition-colors duration-200"
+                variant="ghost"
+                size="sm"
+                className="text-xs bg-dispatch-muted/30 hover:bg-dispatch-muted/50 text-white/80"
               >
                 Cancel
-              </button>
-              <button 
+              </Button>
+              <Button 
                 type="submit"
-                className="px-3 py-1 text-xs rounded bg-dispatch-accent/30 hover:bg-dispatch-accent/50 text-dispatch-accent transition-colors duration-200"
+                variant="ghost"
+                size="sm"
+                className="text-xs bg-dispatch-accent/30 hover:bg-dispatch-accent/50 text-dispatch-accent"
               >
                 Login
-              </button>
+              </Button>
             </div>
           </form>
         </div>
