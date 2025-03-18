@@ -113,21 +113,6 @@ const BackgroundEffects: React.FC = () => {
     };
   }, [showUrgentAssistance, toast]);
 
-  const handleWaypoint = () => {
-    setShowUrgentAssistance(false);
-  };
-
-  const handleNotificationClick = () => {
-    // The same as pressing E - toggle the notification
-    setShowUrgentAssistance(false);
-    
-    toast({
-      title: "Notification Cleared",
-      description: `Call #${currentNotification.id} removed from view`,
-      variant: "default",
-    });
-  };
-
   return (
     <>
       {/* Very transparent dark background to improve readability without blocking view */}
@@ -137,9 +122,6 @@ const BackgroundEffects: React.FC = () => {
       <UrgentAssistanceNotification
         {...currentNotification}
         isVisible={showUrgentAssistance}
-        onWaypoint={handleWaypoint}
-        onDismiss={() => setShowUrgentAssistance(false)}
-        onClick={handleNotificationClick}
       />
     </>
   );

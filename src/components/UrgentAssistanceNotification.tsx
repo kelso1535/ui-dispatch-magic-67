@@ -2,8 +2,6 @@
 import React, { useEffect, useState } from 'react';
 import { MapPin, Phone, Navigation } from 'lucide-react';
 import { useToast } from '@/hooks/use-toast';
-import { Button } from '@/components/ui/button';
-import { cn } from '@/lib/utils';
 
 export interface UrgentAssistanceProps {
   id: string;
@@ -16,7 +14,6 @@ export interface UrgentAssistanceProps {
   isUrgentBackup?: boolean;
   onWaypoint?: () => void;
   onDismiss?: () => void;
-  onClick?: () => void;
 }
 
 const UrgentAssistanceNotification: React.FC<UrgentAssistanceProps> = ({
@@ -29,8 +26,7 @@ const UrgentAssistanceNotification: React.FC<UrgentAssistanceProps> = ({
   isVisible,
   isUrgentBackup = false,
   onWaypoint,
-  onDismiss,
-  onClick
+  onDismiss
 }) => {
   const { toast } = useToast();
   const [flashState, setFlashState] = useState<'red' | 'blue'>('red');
@@ -46,16 +42,6 @@ const UrgentAssistanceNotification: React.FC<UrgentAssistanceProps> = ({
     }
   }, [isUrgentBackup, isVisible]);
 
-  const handleWaypoint = () => {
-    toast({
-      title: "Waypoint Set",
-      description: `Waypoint set to ${location}`,
-      variant: "default",
-    });
-    
-    if (onWaypoint) onWaypoint();
-  };
-
   if (!isVisible) return null;
 
   const bgColorClass = isUrgentBackup 
@@ -66,14 +52,13 @@ const UrgentAssistanceNotification: React.FC<UrgentAssistanceProps> = ({
 
   return (
     <div 
-      className={cn(
-        "fixed top-8 right-8 z-50 w-80 text-white rounded-md shadow-lg border border-white/10 backdrop-blur-sm cursor-pointer",
-        "animate-in fade-in slide-in-from-right duration-300",
-        "flex flex-col",
-        bgColorClass,
-        isUrgentBackup && "transition-colors duration-300"
-      )}
-      onClick={onClick}
+      className={`
+        fixed top-8 right-8 z-50 w-80 text-white rounded-md shadow-lg border border-white/10 backdrop-blur-sm
+        animate-in fade-in slide-in-from-right duration-300
+        flex flex-col
+        ${bgColorClass}
+        ${isUrgentBackup ? "transition-colors duration-300" : ""}
+      `}
     >
       {/* Header */}
       <div className="flex items-center justify-between p-3 border-b border-white/20">
@@ -102,21 +87,6 @@ const UrgentAssistanceNotification: React.FC<UrgentAssistanceProps> = ({
             <p className="text-sm">{coordinates}</p>
           </div>
         )}
-      </div>
-      
-      {/* Actions */}
-      <div className="p-3 border-t border-white/20 flex justify-end gap-2">
-        <Button 
-          onClick={(e) => {
-            e.stopPropagation();
-            handleWaypoint();
-          }}
-          size="sm"
-          className="bg-white/20 hover:bg-white/30 text-white"
-        >
-          <Navigation className="h-4 w-4 mr-1" />
-          Set Waypoint
-        </Button>
       </div>
     </div>
   );
