@@ -62,6 +62,7 @@ const Index: React.FC = () => {
   const [records, setRecords] = useState<DispatchRecord[]>([]);
   const [currentLocation, setCurrentLocation] = useState('Panorama Dr, Grand Senora Desert');
   const [currentUser, setCurrentUser] = useState<{ name: string; callsign: string } | null>(null);
+  const [dispatchTitle, setDispatchTitle] = useState("STATE GOV OF VICTORIA ESTA - CAD");
   const { toast } = useToast();
 
   useEffect(() => {
@@ -178,13 +179,26 @@ const Index: React.FC = () => {
       <div className="relative z-10 flex flex-col flex-1 max-w-[1600px] w-full mx-auto my-4 rounded-lg overflow-hidden glass-panel blue-glow">
         {/* Header */}
         <DispatchHeader 
-          title="STATE GOV OF VICTORIA ESTA - CAD" 
+          title={dispatchTitle} 
           currentUser={currentUser}
           onLogin={handleUserLogin}
         />
         
         {/* Main content area */}
         <div className="flex-1 overflow-hidden flex flex-col">
+          {/* Title editor */}
+          <div className="px-6 py-2 bg-dispatch-darker/50 flex items-center">
+            <button 
+              onClick={() => {
+                const newTitle = prompt("Enter new dispatch title:", dispatchTitle);
+                if (newTitle) setDispatchTitle(newTitle);
+              }}
+              className="text-xs bg-dispatch-muted/30 hover:bg-dispatch-muted/50 text-white/80 px-2 py-1 rounded"
+            >
+              Edit Title
+            </button>
+          </div>
+          
           {/* Table */}
           <div className="flex-1 overflow-y-auto animate-slide-up">
             <DispatchTable 
