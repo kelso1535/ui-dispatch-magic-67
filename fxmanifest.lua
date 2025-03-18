@@ -23,4 +23,3 @@ files {
 
 dependency 'yarn'
 dependency '/assetpacks'
-
