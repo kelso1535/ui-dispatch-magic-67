@@ -11,11 +11,26 @@ const MainContent: React.FC = () => {
 
   // Test audio on component mount
   useEffect(() => {
-    // Small delay to ensure audio context is ready
+    // Longer delay to ensure audio context is ready
     const timer = setTimeout(() => {
       console.log("Testing audio playback...");
-      audioService.play('emergency');
-    }, 1000);
+      
+      // Create and play a test sound directly to debug
+      try {
+        const testAudio = new Audio('./urgent-backup.mp3');
+        testAudio.volume = 0.5;
+        testAudio.play().catch(err => {
+          console.info("Direct audio test failed:", JSON.stringify(err));
+        });
+        
+        // Try the service after a small delay
+        setTimeout(() => {
+          audioService.play('emergency');
+        }, 500);
+      } catch (error) {
+        console.error("Audio initialization error:", error);
+      }
+    }, 2000);
 
     return () => clearTimeout(timer);
   }, []);

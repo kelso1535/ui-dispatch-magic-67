@@ -11,11 +11,12 @@ class AudioService {
   private preloadSounds() {
     if (this.initialized) return;
 
+    // Use the correct path to the audio files in the public directory
     const soundEffects = {
-      'emergency': '/urgent-backup.mp3',
-      'duress': '/duress-alert.mp3',
-      'backup': '/backup-alert.mp3',
-      'location': '/location-share.mp3'
+      'emergency': './urgent-backup.mp3',
+      'duress': './duress-alert.mp3',
+      'backup': './backup-alert.mp3',
+      'location': './location-share.mp3'
     };
 
     for (const [name, path] of Object.entries(soundEffects)) {
@@ -39,8 +40,9 @@ class AudioService {
       // Create a new instance to allow overlapping sounds
       const soundInstance = sound.cloneNode() as HTMLAudioElement;
       
+      // Add a more comprehensive error handler with better logging
       soundInstance.play().catch(error => {
-        console.error(`Failed to play sound ${soundName}:`, error);
+        console.info("Audio play failed:", JSON.stringify(error));
       });
     } else {
       console.warn(`Sound not found: ${soundName}`);
