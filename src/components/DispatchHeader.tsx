@@ -1,18 +1,17 @@
-
 import React, { useState } from 'react';
 import { cn } from '@/lib/utils';
 import { UserCircle2, Clock, Settings } from 'lucide-react';
 import { Button } from './ui/button';
 
 interface DispatchHeaderProps {
-  title: string;
+  title?: string;
   className?: string;
   currentUser?: { name: string; callsign: string } | null;
   onLogin?: (user: { name: string; callsign: string }) => void;
 }
 
 const DispatchHeader: React.FC<DispatchHeaderProps> = ({ 
-  title, 
+  title = "Emergency Services CAD", 
   className,
   currentUser,
   onLogin

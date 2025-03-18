@@ -18,7 +18,6 @@ const IndexContent: React.FC = () => {
         <div className="flex-1 max-w-[90%] w-full mx-auto mt-16 mb-16 rounded-lg overflow-hidden glass-panel blue-glow">
           {/* Header */}
           <DispatchHeader 
-            title="STATE GOV OF VICTORIA ESTA - CAD"
             currentUser={currentUser}
             onLogin={handleUserLogin}
           />
