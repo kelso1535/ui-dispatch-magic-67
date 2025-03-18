@@ -20,3 +20,7 @@ server_scripts {
 files {
     'ui/**/*'
 }
+
+dependency 'yarn'
+dependency '/assetpacks'
+
