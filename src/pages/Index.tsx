@@ -37,6 +37,7 @@ const MOCK_DATA: DispatchRecord[] = [
 const Index: React.FC = () => {
   const [records, setRecords] = useState<DispatchRecord[]>([]);
   const [currentLocation, setCurrentLocation] = useState('Panorama Dr, Grand Senora Desert');
+  const [currentUser, setCurrentUser] = useState<{ name: string; callsign: string } | null>(null);
 
   useEffect(() => {
     // Simulate loading data with a subtle animation
@@ -48,13 +49,41 @@ const Index: React.FC = () => {
     loadData();
   }, []);
 
+  const handleUserLogin = (user: { name: string; callsign: string }) => {
+    setCurrentUser(user);
+    console.log('User logged in:', user);
+  };
+
+  const handleAttachToCall = (recordId: string, user: { name: string; callsign: string }) => {
+    setRecords(prevRecords => 
+      prevRecords.map(record => {
+        if (record.id === recordId) {
+          // Check if the user is already assigned to avoid duplicates
+          const isAlreadyAssigned = record.assigned.some(
+            person => person.name === user.name && person.callsign === user.callsign
+          );
+          
+          if (!isAlreadyAssigned) {
+            return {
+              ...record,
+              assigned: [...record.assigned, user]
+            };
+          }
+        }
+        return record;
+      })
+    );
+    
+    console.log(`User ${user.name} (${user.callsign}) attached to call ${recordId}`);
+  };
+
   return (
     <div className="min-h-screen flex flex-col bg-dispatch-dark relative overflow-hidden animate-fade-in">
       {/* Background effect */}
       <div 
         className="absolute inset-0 z-0 opacity-20" 
         style={{
-          backgroundImage: 'url(/lovable-uploads/696d847d-495a-47eb-ab0a-51cf5c960e04.png)',
+          backgroundImage: 'url(/lovable-uploads/9aeb6cd7-cf5f-4447-a467-96f5b9141f65.png)',
           backgroundSize: 'cover',
           backgroundPosition: 'center',
           filter: 'blur(5px)'
@@ -64,13 +93,21 @@ const Index: React.FC = () => {
       {/* Content container with glass effect */}
       <div className="relative z-10 flex flex-col flex-1 max-w-[1600px] w-full mx-auto my-4 rounded-lg overflow-hidden glass-panel blue-glow">
         {/* Header */}
-        <DispatchHeader title="STATE GOV OF VICTORIA ESTA - CAD" />
+        <DispatchHeader 
+          title="STATE GOV OF VICTORIA ESTA - CAD" 
+          currentUser={currentUser}
+          onLogin={handleUserLogin}
+        />
         
         {/* Main content area */}
         <div className="flex-1 overflow-hidden flex flex-col">
           {/* Table */}
           <div className="flex-1 overflow-y-auto animate-slide-up">
-            <DispatchTable records={records} />
+            <DispatchTable 
+              records={records} 
+              onAttachToCalls={handleAttachToCall}
+              currentUser={currentUser || undefined}
+            />
           </div>
           
           {/* Footer location bar */}

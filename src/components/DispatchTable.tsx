@@ -2,6 +2,7 @@
 import React from 'react';
 import { cn } from '@/lib/utils';
 import StatusBadge from './StatusBadge';
+import { UserPlus } from 'lucide-react';
 
 export interface DispatchRecord {
   id: string;
@@ -20,9 +21,29 @@ export interface DispatchRecord {
 interface DispatchTableProps {
   records: DispatchRecord[];
   className?: string;
+  onAttachToCalls?: (recordId: string, user: { name: string; callsign: string }) => void;
+  currentUser?: { name: string; callsign: string };
 }
 
-const DispatchTable: React.FC<DispatchTableProps> = ({ records, className }) => {
+const DispatchTable: React.FC<DispatchTableProps> = ({ 
+  records, 
+  className,
+  onAttachToCalls,
+  currentUser
+}) => {
+  const handleAttachToCall = (recordId: string) => {
+    if (onAttachToCalls && currentUser) {
+      onAttachToCalls(recordId, currentUser);
+    }
+  };
+
+  const isUserAttached = (record: DispatchRecord) => {
+    if (!currentUser) return false;
+    return record.assigned.some(person => 
+      person.name === currentUser.name && person.callsign === currentUser.callsign
+    );
+  };
+
   return (
     <div className={cn('w-full overflow-hidden', className)}>
       <div className="overflow-x-auto">
@@ -65,6 +86,17 @@ const DispatchTable: React.FC<DispatchTableProps> = ({ records, className }) => 
                         <span className="text-white/50 ml-1">- {person.callsign}</span>
                       </div>
                     ))}
+                    
+                    {onAttachToCalls && currentUser && !isUserAttached(record) && (
+                      <button 
+                        onClick={() => handleAttachToCall(record.id)}
+                        className="mt-2 px-2 py-1 text-xs rounded bg-dispatch-accent/20 hover:bg-dispatch-accent/30 text-dispatch-accent border border-dispatch-accent/30 transition-colors duration-200 flex items-center"
+                      >
+                        <UserPlus size={14} className="mr-1" />
+                        Attach to Call
+                      </button>
+                    )}
+                    
                     <div className="flex flex-wrap justify-end gap-1 mt-2">
                       {record.statuses.map((status, idx) => (
                         <StatusBadge key={idx} status={status as any} />
