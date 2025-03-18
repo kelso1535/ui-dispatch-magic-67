@@ -3,10 +3,10 @@ Config = {}
 
 -- Key bindings (default keys)
 Config.Keys = {
-    Emergency = 'E',     -- Emergency alert
-    Duress = 'D',       -- Duress signal
-    Backup = 'B',       -- Request backup
-    Location = 'END'    -- Share location
+    Emergency = 38, -- E key
+    Duress = 44,    -- D key
+    Backup = 29,    -- B key
+    Location = 177  -- END key
 }
 
 -- Sound settings
