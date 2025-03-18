@@ -20,11 +20,6 @@ Citizen.CreateThread(function()
                 type = 'EMERGENCY',
                 details = 'Officer requesting immediate assistance'
             })
-            -- Play sound locally
-            SendNUIMessage({
-                type = 'playSound',
-                sound = 'emergency'
-            })
         end
         
         -- Duress Signal (D key)
@@ -34,11 +29,6 @@ Citizen.CreateThread(function()
                 location = coords,
                 type = 'DURESS',
                 details = 'Officer in distress'
-            })
-            -- Play sound locally
-            SendNUIMessage({
-                type = 'playSound',
-                sound = 'duress'
             })
         end
         
@@ -50,11 +40,6 @@ Citizen.CreateThread(function()
                 type = 'BACKUP',
                 details = 'Officer requesting backup'
             })
-            -- Play sound locally
-            SendNUIMessage({
-                type = 'playSound',
-                sound = 'backup'
-            })
         end
         
         -- Location Share (End key)
@@ -64,11 +49,6 @@ Citizen.CreateThread(function()
                 location = coords,
                 type = 'LOCATION',
                 details = 'Officer sharing location'
-            })
-            -- Play sound locally
-            SendNUIMessage({
-                type = 'playSound',
-                sound = 'location'
             })
         end
     end
@@ -81,29 +61,6 @@ AddEventHandler('dispatch:receiveCall', function(data)
         type = 'newCall',
         data = data
     })
-    
-    -- Play appropriate sound based on call type
-    if data.type == 'EMERGENCY' then
-        SendNUIMessage({
-            type = 'playSound',
-            sound = 'emergency'
-        })
-    elseif data.type == 'DURESS' then
-        SendNUIMessage({
-            type = 'playSound',
-            sound = 'duress'
-        })
-    elseif data.type == 'BACKUP' then
-        SendNUIMessage({
-            type = 'playSound',
-            sound = 'backup'
-        })
-    elseif data.type == 'LOCATION' then
-        SendNUIMessage({
-            type = 'playSound',
-            sound = 'location'
-        })
-    end
 end)
 
 -- Toggle UI visibility
@@ -118,18 +75,3 @@ end)
 
 -- Register keybind for dispatch UI
 RegisterKeyMapping('dispatch', 'Toggle Dispatch Interface', 'keyboard', 'DELETE')
-
--- Close UI with escape key
-RegisterNUICallback('close', function(data, cb)
-    isUiOpen = false
-    SetNuiFocus(false, false)
-    cb('ok')
-end)
-
--- Callback for setting waypoint
-RegisterNUICallback('setWaypoint', function(data, cb)
-    if data.coords then
-        SetNewWaypoint(data.coords.x, data.coords.y)
-    end
-    cb('ok')
-end)
