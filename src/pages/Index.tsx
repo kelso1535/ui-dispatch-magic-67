@@ -3,6 +3,7 @@ import React from 'react';
 import DispatchHeader from '@/components/DispatchHeader';
 import MainContent from '@/components/MainContent';
 import BackgroundEffects from '@/components/BackgroundEffects';
+import KeyboardShortcutHelper from '@/components/KeyboardShortcutHelper';
 import { UserProvider, useUser } from '@/contexts/UserContext';
 
 const IndexContent: React.FC = () => {
@@ -25,6 +26,9 @@ const IndexContent: React.FC = () => {
           <MainContent />
         </div>
       </div>
+      
+      {/* Keyboard shortcut helper */}
+      <KeyboardShortcutHelper />
     </div>
   );
 };
