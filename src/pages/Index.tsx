@@ -9,20 +9,22 @@ const IndexContent: React.FC = () => {
   const { currentUser, handleUserLogin } = useUser();
   
   return (
-    <div className="min-h-screen flex flex-col bg-dispatch-dark relative overflow-hidden animate-fade-in">
+    <div className="min-h-screen flex flex-col bg-transparent relative overflow-hidden animate-fade-in">
       {/* Background and status indicators */}
       <BackgroundEffects />
       
-      {/* Content container with glass effect */}
-      <div className="relative z-10 flex flex-col flex-1 max-w-[1600px] w-full mx-auto my-4 rounded-lg overflow-hidden glass-panel blue-glow">
-        {/* Header */}
-        <DispatchHeader 
-          title="STATE GOV OF VICTORIA ESTA - CAD"
-          currentUser={currentUser}
-          onLogin={handleUserLogin}
-        />
-        
-        <MainContent />
+      {/* Content container with glass effect - now floating over screen */}
+      <div className="absolute inset-0 z-10 flex flex-col">
+        <div className="flex-1 max-w-[90%] w-full mx-auto mt-16 mb-16 rounded-lg overflow-hidden glass-panel blue-glow">
+          {/* Header */}
+          <DispatchHeader 
+            title="STATE GOV OF VICTORIA ESTA - CAD"
+            currentUser={currentUser}
+            onLogin={handleUserLogin}
+          />
+          
+          <MainContent />
+        </div>
       </div>
     </div>
   );
