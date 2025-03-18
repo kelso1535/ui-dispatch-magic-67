@@ -12,7 +12,8 @@ const MOCK_DATA: DispatchRecord[] = [
     location: 'Panorama Dr Grand Senora',
     details: 'Possible Fire Reported. ALERT STRUCT BUILDING FIRE. YELLOW JACK, PANORAMA DR, GRAND SENORA DESERT',
     assigned: [],
-    statuses: ['GPS']
+    statuses: ['GPS'],
+    callerPhone: '555-0123'
   },
   {
     id: '403',
@@ -22,7 +23,8 @@ const MOCK_DATA: DispatchRecord[] = [
     location: 'El Rancho Blvd El Burro Heights',
     details: 'Possible Fire Reported. ALERT STRUCT BUILDING FIRE - Elysian Fields Fwy, El Burro Heights',
     assigned: [],
-    statuses: ['GPS']
+    statuses: ['GPS'],
+    callerPhone: '555-0124'
   },
   {
     id: '405',
@@ -32,7 +34,8 @@ const MOCK_DATA: DispatchRecord[] = [
     location: 'Olympic Fwy Downtown',
     details: 'Vehicle accident with injuries. Multiple vehicles involved. Possible entrapment.',
     assigned: [],
-    statuses: ['GPS']
+    statuses: ['GPS'],
+    callerPhone: '555-2468'
   },
   {
     id: '407',
@@ -42,7 +45,8 @@ const MOCK_DATA: DispatchRecord[] = [
     location: 'Vespucci Beach',
     details: 'Water rescue - swimmer in distress approximately 100 yards offshore. Caller states victim is struggling to stay above water.',
     assigned: [],
-    statuses: ['GPS']
+    statuses: ['GPS'],
+    callerPhone: '555-7890'
   },
   {
     id: '410',
@@ -85,7 +89,8 @@ export const useDispatchRecords = () => {
           location: ['Downtown LS', 'Vinewood', 'Sandy Shores', 'Paleto Bay'][Math.floor(Math.random() * 4)],
           details: 'New incident reported. Units requested to respond.',
           assigned: [],
-          statuses: ['GPS']
+          statuses: ['GPS'],
+          callerPhone: Math.random() > 0.3 ? `555-${Math.floor(Math.random() * 10000).toString().padStart(4, '0')}` : undefined
         };
         
         setRecords(prev => [newCall, ...prev]);

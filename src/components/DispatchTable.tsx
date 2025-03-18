@@ -1,8 +1,7 @@
-
 import React from 'react';
 import { cn } from '@/lib/utils';
 import StatusBadge from './StatusBadge';
-import { MapPin, CheckCircle, XCircle, Trash2, Navigation } from 'lucide-react';
+import { MapPin, CheckCircle, XCircle, Trash2, Navigation, Phone } from 'lucide-react';
 import { Button } from './ui/button';
 
 export interface DispatchRecord {
@@ -17,6 +16,7 @@ export interface DispatchRecord {
     callsign: string;
   }[];
   statuses: string[];
+  callerPhone?: string;
 }
 
 interface DispatchTableProps {
@@ -65,6 +65,7 @@ const DispatchTable: React.FC<DispatchTableProps> = ({
               <th className="px-4 py-2 text-left text-xs font-semibold text-white/60 uppercase tracking-wider">Type</th>
               <th className="px-4 py-2 text-left text-xs font-semibold text-white/60 uppercase tracking-wider">Location</th>
               <th className="px-4 py-2 text-left text-xs font-semibold text-white/60 uppercase tracking-wider">Details</th>
+              <th className="px-4 py-2 text-left text-xs font-semibold text-white/60 uppercase tracking-wider">Phone</th>
               <th className="px-4 py-2 text-left text-xs font-semibold text-white/60 uppercase tracking-wider">Assigned</th>
               <th className="px-4 py-2 text-center text-xs font-semibold text-white/60 uppercase tracking-wider">Actions</th>
             </tr>
@@ -88,6 +89,14 @@ const DispatchTable: React.FC<DispatchTableProps> = ({
                 </td>
                 <td className="px-4 py-4 text-sm">{record.location}</td>
                 <td className="px-4 py-4 text-sm max-w-md truncate">{record.details}</td>
+                <td className="px-4 py-4 text-sm">
+                  {record.callerPhone && (
+                    <div className="flex items-center gap-1">
+                      <Phone className="h-3 w-3 text-white/60" />
+                      <span className="font-mono">{record.callerPhone}</span>
+                    </div>
+                  )}
+                </td>
                 <td className="px-4 py-4">
                   <div className="flex flex-col space-y-1">
                     {record.assigned.length > 0 ? (
