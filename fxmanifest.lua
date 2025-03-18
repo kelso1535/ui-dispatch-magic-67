@@ -18,8 +18,9 @@ server_scripts {
 }
 
 files {
-    'ui/**/*'
+    'ui/index.html',
+    'ui/assets/**/*'
 }
 
-dependency 'yarn'
+-- Use either yarn or node directly, but not both
 dependency '/assetpacks'

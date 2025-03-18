@@ -16,14 +16,10 @@ document.addEventListener('DOMContentLoaded', () => {
 
 // Set up a way to communicate with the FiveM client
 window.addEventListener('message', (event) => {
-  // Handle FiveM messages here
   if (event.data.type === 'dispatch:receiveCall') {
     console.log('Received dispatch call:', event.data);
-    // You can dispatch this to your React components
   }
 });
 
-// Make fetch available in FiveM
-if (!window.fetch) {
-  console.log("FiveM environment detected, setting up custom fetch");
-}
+// Console log to verify the UI is loading
+console.log('FiveM Dispatch UI initialized');
