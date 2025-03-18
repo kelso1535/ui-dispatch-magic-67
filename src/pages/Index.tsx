@@ -5,6 +5,7 @@ import MainContent from '@/components/MainContent';
 import BackgroundEffects from '@/components/BackgroundEffects';
 import KeyboardShortcutHelper from '@/components/KeyboardShortcutHelper';
 import { UserProvider, useUser } from '@/contexts/UserContext';
+import { KeyBindingsProvider } from '@/contexts/KeyBindingsContext';
 
 const IndexContent: React.FC = () => {
   const { currentUser, handleUserLogin } = useUser();
@@ -36,7 +37,9 @@ const IndexContent: React.FC = () => {
 const Index: React.FC = () => {
   return (
     <UserProvider>
-      <IndexContent />
+      <KeyBindingsProvider>
+        <IndexContent />
+      </KeyBindingsProvider>
     </UserProvider>
   );
 };

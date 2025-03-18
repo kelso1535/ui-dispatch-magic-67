@@ -2,6 +2,8 @@
 import React, { useState, useEffect } from 'react';
 import UrgentAssistanceNotification from './UrgentAssistanceNotification';
 import { useToast } from '@/hooks/use-toast';
+import { useKeyBindings, AlertType } from '@/contexts/KeyBindingsContext';
+import { useUser } from '@/contexts/UserContext';
 
 // Define the notification types
 interface NotificationType {
@@ -29,8 +31,10 @@ const BackgroundEffects: React.FC = () => {
     isUrgentBackup: true
   });
   const { toast } = useToast();
+  const { keyBindings, triggerAlert } = useKeyBindings();
+  const { currentUser } = useUser();
 
-  // Sample notifications (one urgent backup and one regular)
+  // Sample notifications (urgent backup and regular)
   const notifications: NotificationType[] = [
     {
       id: '539.1',
@@ -55,15 +59,146 @@ const BackgroundEffects: React.FC = () => {
       ],
       coordinates: 'Vinewood Park Dr, Vinewood Hills',
       isUrgentBackup: false
+    },
+    {
+      id: '544',
+      title: 'OFFICER LOCATION',
+      subtitle: 'PURSUIT IN PROGRESS',
+      location: 'Strawberry Ave, Davis',
+      details: [
+        'Officer sharing location during pursuit',
+        'Heading northbound on Strawberry Ave'
+      ],
+      coordinates: 'Strawberry Ave, Davis',
+      isUrgentBackup: false
+    },
+    {
+      id: '547',
+      title: 'DURESS SIGNAL',
+      subtitle: 'OFFICER IN DANGER',
+      location: 'Mission Row Police Station',
+      details: [
+        'EMERGENCY - Officer activated duress signal',
+        'Immediate assistance required'
+      ],
+      coordinates: 'Mission Row Police Station',
+      isUrgentBackup: true
     }
   ];
+
+  // Generate a location-sharing notification with the current user
+  const generateLocationNotification = (): NotificationType => {
+    return {
+      id: (540 + Math.floor(Math.random() * 100)).toString(),
+      title: 'LOCATION SHARED',
+      subtitle: currentUser ? `OFFICER ${currentUser.callsign}` : 'OFFICER LOCATION',
+      location: ['Downtown LS', 'Vinewood', 'Sandy Shores', 'Paleto Bay'][Math.floor(Math.random() * 4)],
+      details: [
+        currentUser ? 
+          `${currentUser.name} (${currentUser.callsign}) shared their location` :
+          'Officer shared their location',
+        'Units requested to respond'
+      ],
+      coordinates: ['Downtown LS', 'Vinewood', 'Sandy Shores', 'Paleto Bay'][Math.floor(Math.random() * 4)],
+      isUrgentBackup: false
+    };
+  };
+  
+  // Create alert notification based on type
+  const createAlertNotification = (type: AlertType): NotificationType => {
+    switch (type) {
+      case 'duress':
+        return {
+          id: (540 + Math.floor(Math.random() * 100)).toString(),
+          title: 'DURESS SIGNAL',
+          subtitle: 'OFFICER IN DANGER',
+          location: ['Downtown LS', 'Vinewood', 'Sandy Shores', 'Paleto Bay'][Math.floor(Math.random() * 4)],
+          details: [
+            'EMERGENCY - Officer activated duress signal',
+            'Immediate assistance required'
+          ],
+          coordinates: ['Downtown LS', 'Vinewood', 'Sandy Shores', 'Paleto Bay'][Math.floor(Math.random() * 4)],
+          isUrgentBackup: true
+        };
+        
+      case 'urgentBackup':
+        return {
+          id: (540 + Math.floor(Math.random() * 100)).toString(),
+          title: 'URGENT ASSISTANCE',
+          subtitle: 'CODE 3 RESPONSE',
+          location: ['Downtown LS', 'Vinewood', 'Sandy Shores', 'Paleto Bay'][Math.floor(Math.random() * 4)],
+          details: [
+            'Officer requires urgent backup',
+            'All available units respond code 3'
+          ],
+          coordinates: ['Downtown LS', 'Vinewood', 'Sandy Shores', 'Paleto Bay'][Math.floor(Math.random() * 4)],
+          isUrgentBackup: true
+        };
+        
+      case 'generalBackup':
+        return {
+          id: (540 + Math.floor(Math.random() * 100)).toString(),
+          title: 'BACKUP REQUESTED',
+          subtitle: 'ADDITIONAL UNITS',
+          location: ['Downtown LS', 'Vinewood', 'Sandy Shores', 'Paleto Bay'][Math.floor(Math.random() * 4)],
+          details: [
+            'Officer requesting backup',
+            'Additional units needed'
+          ],
+          coordinates: ['Downtown LS', 'Vinewood', 'Sandy Shores', 'Paleto Bay'][Math.floor(Math.random() * 4)],
+          isUrgentBackup: false
+        };
+        
+      case 'locationShare':
+      default:
+        return generateLocationNotification();
+    }
+  };
+
+  // Handle key bindings for alerts
+  useEffect(() => {
+    const handleKeyPress = (event: KeyboardEvent) => {
+      const key = event.key.toLowerCase();
+      
+      // Check for each key binding
+      Object.entries(keyBindings).forEach(([type, binding]) => {
+        if (key === binding.key.toLowerCase()) {
+          const alertType = type as AlertType;
+          
+          // For urgentBackup, toggle the notification
+          if (alertType === 'urgentBackup') {
+            setShowUrgentAssistance(prev => !prev);
+            if (!showUrgentAssistance) {
+              const notification = createAlertNotification(alertType);
+              setCurrentNotification(notification);
+            }
+          } else {
+            // For other alerts, show a notification and potentially update the UI
+            const notification = createAlertNotification(alertType);
+            setCurrentNotification(notification);
+            if (!showUrgentAssistance) {
+              setShowUrgentAssistance(true);
+            }
+          }
+          
+          // Trigger the appropriate alert
+          triggerAlert(alertType);
+        }
+      });
+    };
+
+    window.addEventListener('keydown', handleKeyPress);
+    return () => {
+      window.removeEventListener('keydown', handleKeyPress);
+    };
+  }, [keyBindings, showUrgentAssistance, triggerAlert]);
 
   // Simulate new urgent assistance calls
   useEffect(() => {
     // Show initial assistance after a delay
     const initialTimer = setTimeout(() => {
       setShowUrgentAssistance(true);
-      playAlertSound();
+      triggerAlert('urgentBackup');
       
       toast({
         title: "Urgent Assistance Required",
@@ -72,46 +207,20 @@ const BackgroundEffects: React.FC = () => {
       });
     }, 5000);
 
-    // Function to play alert sound
-    const playAlertSound = () => {
-      try {
-        const audio = new Audio('/alert.mp3'); // You would need to add this audio file
-        audio.volume = 0.5;
-        audio.play().catch(e => console.log('Audio play failed:', e));
-      } catch (error) {
-        console.log('Audio not supported');
-      }
-    };
-
     // Switch between notifications for demo purposes
     const notificationInterval = setInterval(() => {
-      if (Math.random() > 0.5) {
+      if (Math.random() > 0.5 && showUrgentAssistance) {
         const nextNotification = notifications[Math.floor(Math.random() * notifications.length)];
         setCurrentNotification(nextNotification);
-        if (showUrgentAssistance) {
-          playAlertSound();
-        }
+        triggerAlert(nextNotification.isUrgentBackup ? 'urgentBackup' : 'generalBackup');
       }
     }, 15000); // Every 15 seconds
-
-    // Simulate keypresses to show/hide assistance (for demo purposes)
-    const handleKeyPress = (event: KeyboardEvent) => {
-      if (event.key === 'e' || event.key === 'E') {
-        setShowUrgentAssistance(prev => !prev);
-        if (!showUrgentAssistance) {
-          playAlertSound();
-        }
-      }
-    };
-
-    window.addEventListener('keydown', handleKeyPress);
 
     return () => {
       clearTimeout(initialTimer);
       clearInterval(notificationInterval);
-      window.removeEventListener('keydown', handleKeyPress);
     };
-  }, [showUrgentAssistance, toast]);
+  }, [showUrgentAssistance, toast, triggerAlert]);
 
   return (
     <>
