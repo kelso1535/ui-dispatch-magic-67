@@ -6,7 +6,7 @@ import { useUser } from '@/contexts/UserContext';
 import { useDispatchRecords } from '@/hooks/useDispatchRecords';
 
 const MainContent: React.FC = () => {
-  const [dispatchTitle, setDispatchTitle] = useState("STATE GOV OF VICTORIA ESTA - CAD");
+  const [dispatchTitle, setDispatchTitle] = useState("");
   const { currentUser } = useUser();
   const { records, handleAttachToCall, handleDetachFromCall } = useDispatchRecords();
 
