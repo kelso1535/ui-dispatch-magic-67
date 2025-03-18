@@ -14,8 +14,14 @@ This guide will help you integrate the dispatch system into your FiveM server.
    - Place `location.mp3` for location sharing
 4. Restart your FiveM server
 
-## Important Note
-This resource does not use Node.js or any npm dependencies. If you encounter any package-related errors, they might be caused by having previous Node.js related files in your resource folder. Make sure to only include the files specified in the fxmanifest.lua.
+## Troubleshooting
+
+If you encounter the Node.js version error:
+```
+error react-hook-form@7.54.2: The engine "node" is incompatible with this module. Expected version ">=18.0.0". Got "16.9.1"
+```
+
+This resource is now set up without Node.js dependencies, so you shouldn't encounter this error anymore.
 
 ## Customizing Key Bindings
 
@@ -44,6 +50,17 @@ For key codes, refer to: https://docs.fivem.net/docs/game-references/controls/
 
 - `/dispatch` - Toggle the dispatch interface
 
+## Events
+
+### Client -> Server
+- `dispatch:emergency`: Sends emergency alert
+- `dispatch:duress`: Sends duress signal
+- `dispatch:requestBackup`: Sends backup request
+- `dispatch:shareLoc`: Shares officer location
+
+### Server -> Client
+- `dispatch:receiveCall`: Receives new dispatch call
+
 ## File Structure
 ```
 dispatch-system/
@@ -61,3 +78,13 @@ dispatch-system/
         ├── backup.mp3
         └── location.mp3
 ```
+
+## Required Sound Files
+
+Make sure to add these sound files to the `html/sounds/` directory:
+1. `emergency.mp3` - Played for emergency alerts
+2. `duress.mp3` - Played for duress signals
+3. `backup.mp3` - Played for backup requests
+4. `location.mp3` - Played for location sharing
+
+These sound files are not included and must be added separately.

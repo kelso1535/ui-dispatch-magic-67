@@ -5,82 +5,55 @@ body {
     padding: 0;
     background-color: transparent;
     color: #fff;
-    overflow: hidden;
 }
 
 #dispatch-container {
     display: none;
     position: absolute;
-    top: 50px;
-    left: 50%;
-    transform: translateX(-50%);
-    width: 60%;
-    max-width: 800px;
-    background-color: rgba(26, 31, 44, 0.95);
-    border-radius: 8px;
-    box-shadow: 0 0 30px rgba(0, 0, 0, 0.7);
-    border: 1px solid rgba(51, 195, 240, 0.2);
-    overflow: hidden;
+    top: 10%;
+    right: 10%;
+    width: 30%;
+    background-color: rgba(0, 0, 0, 0.8);
+    border-radius: 5px;
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.5);
 }
 
 #dispatch-header {
     display: flex;
     justify-content: space-between;
     align-items: center;
-    padding: 15px 20px;
-    background-color: rgba(20, 22, 32, 0.95);
-    border-bottom: 1px solid rgba(51, 195, 240, 0.2);
+    padding: 10px;
+    background-color: rgba(40, 40, 40, 0.9);
+    border-top-left-radius: 5px;
+    border-top-right-radius: 5px;
 }
 
 #dispatch-header h1 {
     margin: 0;
-    font-size: 1.4em;
-    font-weight: 600;
-    letter-spacing: 0.5px;
-    text-transform: uppercase;
-    color: rgba(255, 255, 255, 0.95);
-    text-shadow: 0 0 10px rgba(51, 195, 240, 0.5);
+    font-size: 1.2em;
 }
 
 #close-btn {
-    background-color: #e53935;
+    background-color: #f44336;
     border: none;
     color: white;
-    padding: 6px 12px;
+    padding: 5px 10px;
     cursor: pointer;
     border-radius: 3px;
-    font-weight: 600;
-    transition: background-color 0.2s, transform 0.1s;
-    text-transform: uppercase;
-    font-size: 0.8em;
-}
-
-#close-btn:hover {
-    background-color: #f44336;
-    transform: translateY(-1px);
-    box-shadow: 0 2px 8px rgba(244, 67, 54, 0.4);
 }
 
 #calls-container {
-    max-height: 70vh;
+    max-height: 500px;
     overflow-y: auto;
-    padding: 12px;
+    padding: 10px;
 }
 
 .call-card {
-    background-color: rgba(36, 41, 57, 0.8);
-    border-radius: 6px;
-    margin-bottom: 12px;
-    padding: 15px;
+    background-color: rgba(60, 60, 60, 0.8);
+    border-radius: 4px;
+    margin-bottom: 10px;
+    padding: 10px;
     position: relative;
-    transition: all 0.2s ease;
-    border: 1px solid rgba(255, 255, 255, 0.05);
-    box-shadow: 0 2px 10px rgba(0, 0, 0, 0.2);
-}
-
-.call-card:hover {
-    background-color: rgba(42, 48, 66, 0.8);
-    border-color: rgba(51, 195, 240, 0.3);
 }
 
 .call-card.emergency {
@@ -92,7 +65,7 @@ body {
 }
 
 .call-card.backup {
-    border-left: 4px solid #33C3F0;
+    border-left: 4px solid #2196f3;
 }
 
 .call-card.location {
@@ -102,153 +75,64 @@ body {
 .call-header {
     display: flex;
     justify-content: space-between;
-    margin-bottom: 8px;
+    margin-bottom: 5px;
 }
 
 .call-id {
     font-weight: bold;
-    color: #ddd;
-    font-family: 'Courier New', monospace;
-    background-color: rgba(0, 0, 0, 0.3);
-    padding: 2px 6px;
-    border-radius: 4px;
-    font-size: 0.9em;
 }
 
 .call-time {
-    color: #bbb;
+    color: #ccc;
     font-size: 0.9em;
-    font-family: 'Courier New', monospace;
 }
 
 .call-type {
     font-weight: bold;
-    margin-bottom: 10px;
-    font-size: 1.1em;
-    text-transform: uppercase;
-    letter-spacing: 1px;
-}
-
-.call-type.emergency {
-    color: #f44336;
-    text-shadow: 0 0 8px rgba(244, 67, 54, 0.4);
-}
-
-.call-type.duress {
-    color: #ff9800;
-    text-shadow: 0 0 8px rgba(255, 152, 0, 0.4);
-}
-
-.call-type.backup {
-    color: #33C3F0;
-    text-shadow: 0 0 8px rgba(51, 195, 240, 0.5);
-}
-
-.call-type.location {
-    color: #4caf50;
-    text-shadow: 0 0 8px rgba(76, 175, 80, 0.4);
+    margin-bottom: 5px;
 }
 
 .call-details {
-    margin-bottom: 10px;
-    line-height: 1.4;
-    padding: 8px;
-    background-color: rgba(0, 0, 0, 0.2);
-    border-radius: 4px;
+    margin-bottom: 5px;
 }
 
 .call-phone {
-    color: #bbb;
-    font-size: 0.9em;
-    margin-bottom: 10px;
-    display: flex;
-    align-items: center;
-    gap: 6px;
-}
-
-.call-phone::before {
-    content: "📞";
+    color: #ccc;
     font-size: 0.9em;
 }
 
 .call-actions {
     display: flex;
     justify-content: flex-end;
-    margin-top: 12px;
+    margin-top: 10px;
 }
 
 button {
-    padding: 8px 14px;
-    margin-left: 8px;
+    padding: 5px 10px;
+    margin-left: 5px;
     border: none;
-    border-radius: 4px;
+    border-radius: 3px;
     cursor: pointer;
-    font-weight: 600;
-    transition: all 0.2s;
-    text-transform: uppercase;
-    font-size: 0.8em;
-    letter-spacing: 0.5px;
 }
 
 .btn-waypoint {
-    background-color: #1976d2;
-    color: white;
-    border: 1px solid rgba(25, 118, 210, 0.3);
-}
-
-.btn-waypoint:hover {
     background-color: #2196f3;
-    box-shadow: 0 2px 8px rgba(33, 150, 243, 0.4);
-    transform: translateY(-1px);
+    color: white;
 }
 
 .btn-respond {
-    background-color: #388e3c;
-    color: white;
-    border: 1px solid rgba(56, 142, 60, 0.3);
-}
-
-.btn-respond:hover {
     background-color: #4caf50;
-    box-shadow: 0 2px 8px rgba(76, 175, 80, 0.4);
-    transform: translateY(-1px);
-}
-
-.btn-respond:disabled {
-    background-color: #666;
-    color: #ddd;
-    cursor: not-allowed;
-    box-shadow: none;
-    transform: none;
+    color: white;
 }
 
 .flash {
-    animation: flash 1.5s infinite;
+    animation: flash 1s infinite;
 }
 
 @keyframes flash {
-    0% { background-color: rgba(36, 41, 57, 0.8); }
-    50% { background-color: rgba(244, 67, 54, 0.2); }
-    100% { background-color: rgba(36, 41, 57, 0.8); }
-}
-
-/* Custom scrollbar */
-::-webkit-scrollbar {
-    width: 5px;
-}
-
-::-webkit-scrollbar-track {
-    background: rgba(0, 0, 0, 0.2);
-    border-radius: 3px;
-}
-
-::-webkit-scrollbar-thumb {
-    background: rgba(51, 195, 240, 0.3);
-    border-radius: 3px;
-}
-
-::-webkit-scrollbar-thumb:hover {
-    background: rgba(51, 195, 240, 0.5);
+    0% { background-color: rgba(60, 60, 60, 0.8); }
+    50% { background-color: rgba(244, 67, 54, 0.5); }
+    100% { background-color: rgba(60, 60, 60, 0.8); }
 }
 
 /* Notification styles */
@@ -256,34 +140,31 @@ button {
     position: fixed;
     right: 20px;
     top: 20px;
-    padding: 15px 20px;
-    border-radius: 6px;
-    box-shadow: 0 5px 15px rgba(0, 0, 0, 0.5);
+    padding: 15px;
+    border-radius: 5px;
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.5);
     color: white;
     font-weight: bold;
     z-index: 9999;
     opacity: 0;
     transform: translateY(-20px);
     animation: fadeIn 0.3s forwards;
-    border: 1px solid rgba(255, 255, 255, 0.1);
-    background-color: rgba(26, 31, 44, 0.95);
-    backdrop-filter: blur(4px);
 }
 
 .notification.emergency {
-    border-left: 4px solid rgba(244, 67, 54, 0.95);
+    background-color: rgba(244, 67, 54, 0.9);
 }
 
 .notification.duress {
-    border-left: 4px solid rgba(255, 152, 0, 0.95);
+    background-color: rgba(255, 152, 0, 0.9);
 }
 
 .notification.backup {
-    border-left: 4px solid rgba(33, 150, 243, 0.95);
+    background-color: rgba(33, 150, 243, 0.9);
 }
 
 .notification.location {
-    border-left: 4px solid rgba(76, 175, 80, 0.95);
+    background-color: rgba(76, 175, 80, 0.9);
 }
 
 @keyframes fadeIn {

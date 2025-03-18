@@ -5,10 +5,17 @@
     <meta charset="utf-8">
     <title>Dispatch System</title>
     <link rel="stylesheet" href="style.css">
-    <link href="https://fonts.googleapis.com/css2?family=Segoe+UI:wght@400;600&display=swap" rel="stylesheet">
 </head>
 <body>
-    <div id="root"></div>
+    <div id="dispatch-container">
+        <div id="dispatch-header">
+            <h1>Dispatch System</h1>
+            <button id="close-btn">Close</button>
+        </div>
+        <div id="calls-container">
+            <!-- Calls will be populated here dynamically -->
+        </div>
+    </div>
     
     <!-- Audio elements -->
     <audio id="sound-emergency" src="sounds/emergency.mp3" preload="auto"></audio>
@@ -16,6 +23,6 @@
     <audio id="sound-backup" src="sounds/backup.mp3" preload="auto"></audio>
     <audio id="sound-location" src="sounds/location.mp3" preload="auto"></audio>
     
-    <script type="module" src="/src/main.tsx"></script>
+    <script src="script.js"></script>
 </body>
 </html>

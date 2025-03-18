@@ -1,7 +1,6 @@
 
 let isVisible = false;
 let callsData = [];
-let callIdCounter = 1;
 
 // Listen for messages from the game client
 window.addEventListener('message', function(event) {
@@ -25,17 +24,6 @@ function toggleDispatchUI(show) {
 
 // Add a new dispatch call to the UI
 function addNewCall(callData) {
-    // Generate unique ID if not provided
-    if (!callData.id) {
-        callData.id = callIdCounter++;
-    }
-    
-    // Add timestamp if not provided
-    if (!callData.time) {
-        const now = new Date();
-        callData.time = now.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' });
-    }
-    
     callsData.unshift(callData); // Add to beginning of array
     updateCallsUI();
 }
@@ -52,19 +40,16 @@ function updateCallsUI() {
             callCard.classList.add('flash');
         }
         
-        // Create type class for color
-        const typeClass = `${call.type.toLowerCase()}`;
-        
         callCard.innerHTML = `
             <div class="call-header">
                 <span class="call-id">#${call.id}</span>
                 <span class="call-time">${call.time}</span>
             </div>
-            <div class="call-type ${typeClass}">${call.type}</div>
+            <div class="call-type">${call.type}</div>
             <div class="call-details">${call.details}</div>
-            <div class="call-phone">Caller: ${call.callerPhone || 'Unknown'}</div>
+            <div class="call-phone">Caller: ${call.callerPhone}</div>
             <div class="call-actions">
-                <button class="btn-waypoint" data-coords='${JSON.stringify(call.coords || {})}'>Set Waypoint</button>
+                <button class="btn-waypoint" data-coords='${JSON.stringify(call.coords)}'>Set Waypoint</button>
                 <button class="btn-respond">Respond</button>
             </div>
         `;
@@ -89,20 +74,6 @@ function updateCallsUI() {
         respondBtn.addEventListener('click', function() {
             // Remove flashing effect when officer responds
             callCard.classList.remove('flash');
-            
-            // Notify the server about response
-            fetch('https://dispatch-system/respondToCall', {
-                method: 'POST',
-                headers: {
-                    'Content-Type': 'application/json; charset=UTF-8',
-                },
-                body: JSON.stringify({ callId: call.id })
-            });
-            
-            // Update UI to show responded
-            respondBtn.textContent = "Responding";
-            respondBtn.disabled = true;
-            respondBtn.style.backgroundColor = "#666";
         });
     });
 }
@@ -113,8 +84,8 @@ function showNotification(callData) {
     notification.className = `notification ${callData.type.toLowerCase()}`;
     
     notification.innerHTML = `
-        <div style="font-size: 1.1em; margin-bottom: 4px;">${callData.type}</div>
-        <div style="opacity: 0.9;">${callData.details}</div>
+        <div>${callData.type}</div>
+        <div>${callData.details}</div>
     `;
     
     document.body.appendChild(notification);
