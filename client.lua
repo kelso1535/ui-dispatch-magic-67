@@ -13,7 +13,7 @@ Citizen.CreateThread(function()
         Citizen.Wait(0)
         
         -- Emergency Alert (E key)
-        if IsControlJustReleased(0, 38) then -- E key
+        if IsControlJustReleased(0, Config.Keys.Emergency) then
             local coords = GetEntityCoords(PlayerPedId())
             TriggerServerEvent('dispatch:emergency', {
                 location = coords,
@@ -28,7 +28,7 @@ Citizen.CreateThread(function()
         end
         
         -- Duress Signal (D key)
-        if IsControlJustReleased(0, 44) then -- D key
+        if IsControlJustReleased(0, Config.Keys.Duress) then
             local coords = GetEntityCoords(PlayerPedId())
             TriggerServerEvent('dispatch:duress', {
                 location = coords,
@@ -43,7 +43,7 @@ Citizen.CreateThread(function()
         end
         
         -- Backup Request (B key)
-        if IsControlJustReleased(0, 29) then -- B key
+        if IsControlJustReleased(0, Config.Keys.Backup) then
             local coords = GetEntityCoords(PlayerPedId())
             TriggerServerEvent('dispatch:requestBackup', {
                 location = coords,
@@ -58,7 +58,7 @@ Citizen.CreateThread(function()
         end
         
         -- Location Share (End key)
-        if IsControlJustReleased(0, 177) then -- End key
+        if IsControlJustReleased(0, Config.Keys.Location) then
             local coords = GetEntityCoords(PlayerPedId())
             TriggerServerEvent('dispatch:shareLoc', {
                 location = coords,
@@ -77,6 +77,21 @@ end)
 -- Handle incoming dispatch calls
 RegisterNetEvent('dispatch:receiveCall')
 AddEventHandler('dispatch:receiveCall', function(data)
+    -- Format coordinates for the NUI
+    if data.location then
+        data.coords = {
+            x = data.location.x,
+            y = data.location.y,
+            z = data.location.z
+        }
+    end
+    
+    -- Generate a timestamp if not provided
+    if not data.time then
+        data.time = os.date("%H:%M")
+    end
+    
+    -- Send to UI
     SendNUIMessage({
         type = 'newCall',
         data = data
@@ -131,5 +146,11 @@ RegisterNUICallback('setWaypoint', function(data, cb)
     if data.coords then
         SetNewWaypoint(data.coords.x, data.coords.y)
     end
+    cb('ok')
+end)
+
+-- Callback for responding to call
+RegisterNUICallback('respondToCall', function(data, cb)
+    TriggerServerEvent('dispatch:respondToCall', data.callId)
     cb('ok')
 end)

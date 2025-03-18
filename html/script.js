@@ -1,6 +1,7 @@
 
 let isVisible = false;
 let callsData = [];
+let callIdCounter = 1;
 
 // Listen for messages from the game client
 window.addEventListener('message', function(event) {
@@ -24,6 +25,17 @@ function toggleDispatchUI(show) {
 
 // Add a new dispatch call to the UI
 function addNewCall(callData) {
+    // Generate unique ID if not provided
+    if (!callData.id) {
+        callData.id = callIdCounter++;
+    }
+    
+    // Add timestamp if not provided
+    if (!callData.time) {
+        const now = new Date();
+        callData.time = now.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' });
+    }
+    
     callsData.unshift(callData); // Add to beginning of array
     updateCallsUI();
 }
@@ -40,16 +52,19 @@ function updateCallsUI() {
             callCard.classList.add('flash');
         }
         
+        // Create type class for color
+        const typeClass = `${call.type.toLowerCase()}`;
+        
         callCard.innerHTML = `
             <div class="call-header">
                 <span class="call-id">#${call.id}</span>
                 <span class="call-time">${call.time}</span>
             </div>
-            <div class="call-type">${call.type}</div>
+            <div class="call-type ${typeClass}">${call.type}</div>
             <div class="call-details">${call.details}</div>
-            <div class="call-phone">Caller: ${call.callerPhone}</div>
+            <div class="call-phone">Caller: ${call.callerPhone || 'Unknown'}</div>
             <div class="call-actions">
-                <button class="btn-waypoint" data-coords='${JSON.stringify(call.coords)}'>Set Waypoint</button>
+                <button class="btn-waypoint" data-coords='${JSON.stringify(call.coords || {})}'>Set Waypoint</button>
                 <button class="btn-respond">Respond</button>
             </div>
         `;
@@ -74,6 +89,20 @@ function updateCallsUI() {
         respondBtn.addEventListener('click', function() {
             // Remove flashing effect when officer responds
             callCard.classList.remove('flash');
+            
+            // Notify the server about response
+            fetch('https://dispatch-system/respondToCall', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json; charset=UTF-8',
+                },
+                body: JSON.stringify({ callId: call.id })
+            });
+            
+            // Update UI to show responded
+            respondBtn.textContent = "Responding";
+            respondBtn.disabled = true;
+            respondBtn.style.backgroundColor = "#888";
         });
     });
 }
@@ -133,3 +162,32 @@ document.addEventListener('keyup', function(event) {
         toggleDispatchUI(false);
     }
 });
+
+// Debug function to add test calls (for development only)
+function addTestCall() {
+    const types = ['EMERGENCY', 'DURESS', 'BACKUP', 'LOCATION'];
+    const details = [
+        'Officer requesting immediate assistance at Alta Street',
+        'Officer in distress near Vespucci Beach',
+        'Backup needed for traffic stop on Route 68',
+        'Sharing location during pursuit on the highway'
+    ];
+    
+    const randomType = types[Math.floor(Math.random() * types.length)];
+    const randomDetails = details[Math.floor(Math.random() * details.length)];
+    
+    addNewCall({
+        id: callIdCounter++,
+        time: new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' }),
+        type: randomType,
+        details: randomDetails,
+        callerPhone: '555-' + Math.floor(1000 + Math.random() * 9000),
+        coords: { x: Math.random() * 2000 - 1000, y: Math.random() * 2000 - 1000, z: Math.random() * 50 }
+    });
+    
+    // Play corresponding sound
+    playSound(randomType.toLowerCase());
+}
+
+// Enable this line for testing UI (comment out before production)
+// setInterval(addTestCall, 5000);

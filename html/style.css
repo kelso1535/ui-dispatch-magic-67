@@ -5,55 +5,74 @@ body {
     padding: 0;
     background-color: transparent;
     color: #fff;
+    overflow: hidden;
 }
 
 #dispatch-container {
     display: none;
     position: absolute;
-    top: 10%;
-    right: 10%;
-    width: 30%;
-    background-color: rgba(0, 0, 0, 0.8);
+    top: 50px;
+    left: 50%;
+    transform: translateX(-50%);
+    width: 60%;
+    max-width: 800px;
+    background-color: rgba(0, 0, 0, 0.85);
     border-radius: 5px;
-    box-shadow: 0 0 10px rgba(0, 0, 0, 0.5);
+    box-shadow: 0 0 20px rgba(0, 0, 0, 0.7);
+    border: 1px solid rgba(255, 255, 255, 0.1);
 }
 
 #dispatch-header {
     display: flex;
     justify-content: space-between;
     align-items: center;
-    padding: 10px;
-    background-color: rgba(40, 40, 40, 0.9);
+    padding: 15px 20px;
+    background-color: rgba(20, 20, 20, 0.95);
     border-top-left-radius: 5px;
     border-top-right-radius: 5px;
+    border-bottom: 1px solid rgba(255, 255, 255, 0.1);
 }
 
 #dispatch-header h1 {
     margin: 0;
-    font-size: 1.2em;
+    font-size: 1.4em;
+    font-weight: 600;
+    letter-spacing: 0.5px;
 }
 
 #close-btn {
-    background-color: #f44336;
+    background-color: #e53935;
     border: none;
     color: white;
-    padding: 5px 10px;
+    padding: 6px 12px;
     cursor: pointer;
     border-radius: 3px;
+    font-weight: 600;
+    transition: background-color 0.2s;
+}
+
+#close-btn:hover {
+    background-color: #f44336;
 }
 
 #calls-container {
-    max-height: 500px;
+    max-height: 70vh;
     overflow-y: auto;
-    padding: 10px;
+    padding: 15px;
 }
 
 .call-card {
-    background-color: rgba(60, 60, 60, 0.8);
+    background-color: rgba(40, 40, 40, 0.8);
     border-radius: 4px;
-    margin-bottom: 10px;
-    padding: 10px;
+    margin-bottom: 15px;
+    padding: 15px;
     position: relative;
+    transition: all 0.2s ease;
+    border: 1px solid rgba(255, 255, 255, 0.05);
+}
+
+.call-card:hover {
+    background-color: rgba(60, 60, 60, 0.8);
 }
 
 .call-card.emergency {
@@ -75,30 +94,50 @@ body {
 .call-header {
     display: flex;
     justify-content: space-between;
-    margin-bottom: 5px;
+    margin-bottom: 8px;
 }
 
 .call-id {
     font-weight: bold;
+    color: #ddd;
 }
 
 .call-time {
-    color: #ccc;
+    color: #bbb;
     font-size: 0.9em;
 }
 
 .call-type {
     font-weight: bold;
-    margin-bottom: 5px;
+    margin-bottom: 10px;
+    font-size: 1.1em;
+}
+
+.call-type.emergency {
+    color: #f44336;
+}
+
+.call-type.duress {
+    color: #ff9800;
+}
+
+.call-type.backup {
+    color: #2196f3;
+}
+
+.call-type.location {
+    color: #4caf50;
 }
 
 .call-details {
-    margin-bottom: 5px;
+    margin-bottom: 10px;
+    line-height: 1.4;
 }
 
 .call-phone {
-    color: #ccc;
+    color: #bbb;
     font-size: 0.9em;
+    margin-bottom: 10px;
 }
 
 .call-actions {
@@ -108,31 +147,59 @@ body {
 }
 
 button {
-    padding: 5px 10px;
-    margin-left: 5px;
+    padding: 8px 12px;
+    margin-left: 8px;
     border: none;
     border-radius: 3px;
     cursor: pointer;
+    font-weight: 600;
+    transition: background-color 0.2s;
 }
 
 .btn-waypoint {
-    background-color: #2196f3;
+    background-color: #1976d2;
     color: white;
+}
+
+.btn-waypoint:hover {
+    background-color: #2196f3;
 }
 
 .btn-respond {
-    background-color: #4caf50;
+    background-color: #388e3c;
     color: white;
 }
 
+.btn-respond:hover {
+    background-color: #4caf50;
+}
+
 .flash {
-    animation: flash 1s infinite;
+    animation: flash 1.5s infinite;
 }
 
 @keyframes flash {
-    0% { background-color: rgba(60, 60, 60, 0.8); }
-    50% { background-color: rgba(244, 67, 54, 0.5); }
-    100% { background-color: rgba(60, 60, 60, 0.8); }
+    0% { background-color: rgba(40, 40, 40, 0.8); }
+    50% { background-color: rgba(244, 67, 54, 0.3); }
+    100% { background-color: rgba(40, 40, 40, 0.8); }
+}
+
+/* Custom scrollbar */
+::-webkit-scrollbar {
+    width: 6px;
+}
+
+::-webkit-scrollbar-track {
+    background: rgba(0, 0, 0, 0.2);
+}
+
+::-webkit-scrollbar-thumb {
+    background: rgba(255, 255, 255, 0.2);
+    border-radius: 3px;
+}
+
+::-webkit-scrollbar-thumb:hover {
+    background: rgba(255, 255, 255, 0.3);
 }
 
 /* Notification styles */
@@ -140,9 +207,9 @@ button {
     position: fixed;
     right: 20px;
     top: 20px;
-    padding: 15px;
-    border-radius: 5px;
-    box-shadow: 0 0 10px rgba(0, 0, 0, 0.5);
+    padding: 15px 20px;
+    border-radius: 4px;
+    box-shadow: 0 5px 15px rgba(0, 0, 0, 0.5);
     color: white;
     font-weight: bold;
     z-index: 9999;
@@ -152,19 +219,19 @@ button {
 }
 
 .notification.emergency {
-    background-color: rgba(244, 67, 54, 0.9);
+    background-color: rgba(244, 67, 54, 0.95);
 }
 
 .notification.duress {
-    background-color: rgba(255, 152, 0, 0.9);
+    background-color: rgba(255, 152, 0, 0.95);
 }
 
 .notification.backup {
-    background-color: rgba(33, 150, 243, 0.9);
+    background-color: rgba(33, 150, 243, 0.95);
 }
 
 .notification.location {
-    background-color: rgba(76, 175, 80, 0.9);
+    background-color: rgba(76, 175, 80, 0.95);
 }
 
 @keyframes fadeIn {
