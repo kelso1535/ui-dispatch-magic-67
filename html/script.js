@@ -102,7 +102,7 @@ function updateCallsUI() {
             // Update UI to show responded
             respondBtn.textContent = "Responding";
             respondBtn.disabled = true;
-            respondBtn.style.backgroundColor = "#888";
+            respondBtn.style.backgroundColor = "#666";
         });
     });
 }
@@ -113,8 +113,8 @@ function showNotification(callData) {
     notification.className = `notification ${callData.type.toLowerCase()}`;
     
     notification.innerHTML = `
-        <div>${callData.type}</div>
-        <div>${callData.details}</div>
+        <div style="font-size: 1.1em; margin-bottom: 4px;">${callData.type}</div>
+        <div style="opacity: 0.9;">${callData.details}</div>
     `;
     
     document.body.appendChild(notification);
@@ -162,32 +162,3 @@ document.addEventListener('keyup', function(event) {
         toggleDispatchUI(false);
     }
 });
-
-// Debug function to add test calls (for development only)
-function addTestCall() {
-    const types = ['EMERGENCY', 'DURESS', 'BACKUP', 'LOCATION'];
-    const details = [
-        'Officer requesting immediate assistance at Alta Street',
-        'Officer in distress near Vespucci Beach',
-        'Backup needed for traffic stop on Route 68',
-        'Sharing location during pursuit on the highway'
-    ];
-    
-    const randomType = types[Math.floor(Math.random() * types.length)];
-    const randomDetails = details[Math.floor(Math.random() * details.length)];
-    
-    addNewCall({
-        id: callIdCounter++,
-        time: new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' }),
-        type: randomType,
-        details: randomDetails,
-        callerPhone: '555-' + Math.floor(1000 + Math.random() * 9000),
-        coords: { x: Math.random() * 2000 - 1000, y: Math.random() * 2000 - 1000, z: Math.random() * 50 }
-    });
-    
-    // Play corresponding sound
-    playSound(randomType.toLowerCase());
-}
-
-// Enable this line for testing UI (comment out before production)
-// setInterval(addTestCall, 5000);
