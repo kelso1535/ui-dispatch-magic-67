@@ -1,8 +1,8 @@
 
 const { exec } = require('child_process');
 
-// Run the Vite build with appropriate flags for Node 16 compatibility
-exec('npx vite build --target es2015', (error, stdout, stderr) => {
+// Run the Vite build with standard configuration
+exec('npx vite build', (error, stdout, stderr) => {
   if (error) {
     console.error(`Build error: ${error.message}`);
     return;

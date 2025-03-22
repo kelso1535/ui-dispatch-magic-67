@@ -22,5 +22,4 @@ files {
     'ui/assets/**/*'
 }
 
--- Use either yarn or node directly, but not both
 dependency '/assetpacks'

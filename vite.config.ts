@@ -14,8 +14,6 @@ export default defineConfig(({ mode }) => ({
     assetsDir: "assets",
     emptyOutDir: true,
     sourcemap: false,
-    // Add target for older Node versions
-    target: "es2015",
     rollupOptions: {
       // Ensure correct paths for FiveM NUI
       output: {
@@ -32,9 +30,5 @@ export default defineConfig(({ mode }) => ({
     alias: {
       "@": path.resolve(__dirname, "./src"),
     },
-  },
-  // Override the engine check for Node.js version
-  optimizeDeps: {
-    force: true
   }
 }));
