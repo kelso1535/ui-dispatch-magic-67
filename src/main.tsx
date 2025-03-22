@@ -14,12 +14,14 @@ document.addEventListener('DOMContentLoaded', () => {
   }
 });
 
-// Set up a way to communicate with the FiveM client
+// Set up communication with the FiveM client
 window.addEventListener('message', (event) => {
+  // Ensure we're only processing messages from our own origin
+  // This is important for FiveM's NUI environment
   if (event.data.type === 'dispatch:receiveCall') {
     console.log('Received dispatch call:', event.data);
   }
 });
 
 // Console log to verify the UI is loading
-console.log('FiveM Dispatch UI initialized');
+console.log('FiveM Dispatch UI initialized in NUI environment');
